@@ -1,10 +1,10 @@
 import ihm._
 import bd._
 
+//main
 object Player extends App {
   
- 
-// var f= new Window
+  //starts player
 var f =Fenetre
 f.startup(args)
 

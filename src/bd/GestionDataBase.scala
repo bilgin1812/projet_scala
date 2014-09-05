@@ -4,14 +4,16 @@ import java.sql.{Connection, DriverManager, ResultSet};
 import scala.collection.mutable.ListBuffer
 object GestionDataBase {
   
-  // Change to Your Database Config
+  // Database Config
   val conn_str = "jdbc:mysql://localhost/scalaplayer?user=root&password="
-  // Load the driver
-  classOf[com.mysql.jdbc.Driver]
 
+/*
+ * gets all of the audio files from database 
+ * send a list of audio files
+ */
    def getAll() : ListBuffer[Audio] = {
      
-	     var mylist=ListBuffer[Audio]()
+	  var mylist=ListBuffer[Audio]()
 	      // Setup the connection
 	  val conn = DriverManager.getConnection(conn_str)
 	  try {
@@ -35,6 +37,7 @@ object GestionDataBase {
 	    
 	  
   }
+  //delete audio
    def putAudio(a:Audio) : Int = {
      println("put appelé")
      
@@ -47,7 +50,7 @@ object GestionDataBase {
 			prepStmt.setString(1, a.name)	
 			prepStmt.setString(2, a.autor)
 			prepStmt.setString(3, a.album)
-			prepStmt.setString(4, a.album)
+			prepStmt.setString(4, a.genre)
 			prepStmt.setInt(5, a.year)
 			prepStmt.setString(6, a.path)
 			var rs = prepStmt.executeUpdate()   
@@ -60,17 +63,14 @@ object GestionDataBase {
 	  finally { conn.close	  }	     
 	  1
   }
+   //delete audio file from database
    def delete(name:String) : Int = {     
 	      // Setup the connection
 	  val conn = DriverManager.getConnection(conn_str)
-	  try {
-      
-	       var sqlStmt = "DELETE FROM audio"+" WHERE audio.name=?;"
-			System.out.println("SQL Statement:\n\t" + sqlStmt);
-			var prepStmt = conn.prepareStatement(sqlStmt);
-			System.out.println("Prepared Statement before bind variables set:\n\t" + prepStmt.toString());
+	  try {     
+	        var sqlStmt = "DELETE FROM audio"+" WHERE audio.name=?;"
+		    var prepStmt = conn.prepareStatement(sqlStmt);
 			prepStmt.setString(1, name)			
-			System.out.println("Prepared Statement after bind variables set:\n\t" + prepStmt.toString());
 			var rs = prepStmt.executeUpdate()      
 	      
 		println("delete succeded")
@@ -89,9 +89,8 @@ object GestionDataBase {
 	  }     
 
   }
-   def modifAudio(a:Audio) : Int = {
-     
-	     
+   //updates audio information
+   def modifAudio(a:Audio) : Int = {	     
 	      // Setup the connection
 	  val conn = DriverManager.getConnection(conn_str)
 	  try {
